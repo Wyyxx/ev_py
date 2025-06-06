@@ -1,0 +1,44 @@
+classDiagram
+    class Producto {
+        +str nombre
+        +str tipo
+        +float precio_unitario
+        +TIPO_LIBRO: str
+        +TIPO_ELECTRONICO: str
+        +TIPO_ROPA: str
+        +IMPUESTOS: dict
+        +calcular_precio_con_impuesto()
+        +__str__()
+    }
+
+    class Pedido {
+        +str cliente
+        +datetime fecha
+        +list productos
+        +agregar_producto(producto, cantidad)
+        +calcular_total()
+        +total_productos()
+        +__str__()
+    }
+
+    class TiendaVirtual {
+        +list pedidos
+        +validar_tipo_producto(tipo)
+        +crear_producto(nombre, tipo, precio)
+        +crear_pedido()
+        +ver_pedidos()
+        +reporte_ventas()
+    }
+
+    class Utils {
+        +guardar_pedidos(pedidos, archivo)
+        +cargar_pedidos(archivo)
+        +validar_numero(valor)
+        +validar_cantidad(valor)
+        +solicitar_entrada(mensaje, validacion, mensaje_error)
+        +solicitar_opcion_menu(opciones, mensaje)
+    }
+
+    TiendaVirtual --> Pedido : gestiona
+    Pedido --> Producto : contiene
+    TiendaVirtual ..> Utils : usa 

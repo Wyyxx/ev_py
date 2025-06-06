@@ -1,0 +1,25 @@
+flowchart TD
+    A[Inicio] --> B[Cargar Pedidos Existentes]
+    B --> C[Mostrar Menú Principal]
+    C --> D{Selección Usuario}
+    
+    D -->|1| E[Crear Pedido]
+    D -->|2| F[Ver Pedidos]
+    D -->|3| G[Reporte Ventas]
+    D -->|4| H[Salir]
+    
+    E --> E1[Ingresar Cliente]
+    E1 --> E2[Agregar Productos]
+    E2 --> E3{Más Productos?}
+    E3 -->|Sí| E2
+    E3 -->|No| E4[Guardar Pedido]
+    E4 --> C
+    
+    F --> F1[Listar Pedidos]
+    F1 --> C
+    
+    G --> G1[Calcular Totales]
+    G1 --> G2[Mostrar Estadísticas]
+    G2 --> C
+    
+    H --> I[Fin] 
