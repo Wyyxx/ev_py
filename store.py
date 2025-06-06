@@ -1,26 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from models import Producto, Pedido
 from utils import guardar_pedidos, cargar_pedidos
 
 class TiendaVirtual(object):
-    """Clase principal que maneja la logica de la tienda"""
+    """Gestiona operaciones de la tienda: pedidos, productos y reportes"""
     
     def __init__(self):
-        """Inicializa la tienda virtual"""
+        """Inicializa la tienda cargando pedidos existentes"""
         self.pedidos = cargar_pedidos()
     
     def validar_tipo_producto(self, tipo):
-        """
-        Valida que el tipo de producto sea valido
-        
-        Args:
-            tipo (str): Tipo de producto a validar
-            
-        Returns:
-            str: El tipo de producto validado y en mayusculas
-            
-        Raises:
-            ValueError: Si el tipo no es valido o no es una cadena
-        """
+        """Valida y normaliza el tipo de producto"""
         if not isinstance(tipo, basestring):
             raise ValueError(u"El tipo debe ser una cadena de texto")
             
@@ -32,22 +24,12 @@ class TiendaVirtual(object):
         return tipo
     
     def crear_producto(self, nombre, tipo, precio):
-        """
-        Crea un nuevo producto
-        
-        Args:
-            nombre (str): Nombre del producto
-            tipo (str): Tipo de producto
-            precio (float): Precio unitario
-            
-        Returns:
-            Producto: El nuevo producto creado
-        """
+        """Crea un nuevo producto validando sus datos"""
         tipo_validado = self.validar_tipo_producto(tipo)
         return Producto(nombre, tipo_validado, precio)
     
     def crear_pedido(self):
-        """Crea un nuevo pedido."""
+        """Interfaz para crear un nuevo pedido"""
         print(u"\n\nCrear nuevo pedido")
         print(u"-" * 20)
         
@@ -117,7 +99,7 @@ class TiendaVirtual(object):
             print(u"\n\nEl pedido fue cancelado (no se agregaron productos)")
     
     def ver_pedidos(self):
-        """Muestra todos los pedidos realizados."""
+        """Muestra lista de pedidos existentes"""
         if not self.pedidos:
             print(u"\n\nNo hay pedidos registrados")
             return
@@ -129,7 +111,7 @@ class TiendaVirtual(object):
             print(pedido)
     
     def reporte_ventas(self):
-        """Muestra un reporte de ventas."""
+        """Genera reporte con estadísticas de ventas"""
         if not self.pedidos:
             print(u"\n\nNo hay ventas registradas")
             return
@@ -138,10 +120,10 @@ class TiendaVirtual(object):
         num_pedidos = len(self.pedidos)
         promedio = total_ventas / num_pedidos if num_pedidos > 0 else 0
         
-        # Encontrar el pedido mas grande
+        # Encontrar pedido con mayor monto
         pedido_mayor = max(self.pedidos, key=lambda p: p.calcular_total())
         
-        # Calcular ventas por tipo de producto
+        # Calcular ventas por tipo
         ventas_por_tipo = {
             Producto.TIPO_LIBRO: 0.0,
             Producto.TIPO_ELECTRONICO: 0.0,

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import json
 import sys
@@ -5,7 +8,7 @@ import codecs
 from datetime import datetime
 from models import Producto, Pedido
 
-# Configurar la codificacion para la salida en Python 2
+# Configuración de codificación para Python 2.7
 if sys.version_info[0] < 3:
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -14,13 +17,7 @@ if sys.version_info[0] < 3:
     sys.stderr = codecs.getwriter('utf-8')(sys.stderr)
 
 def guardar_pedidos(pedidos, archivo="pedidos.txt"):
-    """
-    Guarda la lista de pedidos en un archivo de texto, un pedido por linea
-    
-    Args:
-        pedidos (list): Lista de pedidos a guardar
-        archivo (str): Ruta del archivo donde guardar los pedidos
-    """
+    """Guarda pedidos en archivo de texto"""
     with open(archivo, 'w') as f:
         for pedido in pedidos:
             # Formatear productos
@@ -33,7 +30,7 @@ def guardar_pedidos(pedidos, archivo="pedidos.txt"):
                     producto.precio_unitario
                 ))
             
-            # Escribir el pedido en una sola linea
+            # Formato: Cliente | Fecha | Productos | Total
             f.write("Cliente: {} | Fecha: {} | Productos: {} | Total: ${:.2f}\n".format(
                 pedido.cliente,
                 pedido.fecha.strftime("%Y-%m-%d %H:%M:%S"),
@@ -42,15 +39,7 @@ def guardar_pedidos(pedidos, archivo="pedidos.txt"):
             ))
 
 def cargar_pedidos(archivo="pedidos.txt"):
-    """
-    Carga la lista de pedidos desde un archivo de texto
-    
-    Args:
-        archivo (str): Ruta del archivo de pedidos
-        
-    Returns:
-        list: Lista de objetos Pedido
-    """
+    """Lee y reconstruye pedidos desde archivo"""
     pedidos = []
     if not os.path.exists(archivo):
         return pedidos
@@ -59,20 +48,20 @@ def cargar_pedidos(archivo="pedidos.txt"):
         with open(archivo, 'r') as f:
             for linea in f:
                 try:
-                    # Dividir la línea en secciones
+                    # Parsear secciones del pedido
                     secciones = linea.strip().split(" | ")
                     if len(secciones) != 4:
                         continue
                     
-                    # Procesar cliente
+                    # Extraer cliente
                     cliente = secciones[0].replace("Cliente: ", "").strip()
                     pedido = Pedido(cliente)
                     
-                    # Procesar fecha
+                    # Extraer fecha
                     fecha_str = secciones[1].replace("Fecha: ", "").strip()
                     pedido.fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M:%S")
                     
-                    # Procesar productos
+                    # Reconstruir productos
                     productos_str = secciones[2].replace("Productos: ", "").strip()
                     for prod in productos_str.split(" + "):
                         partes = prod.split()
@@ -96,18 +85,7 @@ def cargar_pedidos(archivo="pedidos.txt"):
     return pedidos
 
 def validar_numero(valor):
-    """
-    Valida que un valor sea un numero valido
-    
-    Args:
-        valor (str): El valor a validar
-        
-    Returns:
-        float: El numero convertido si es valido
-        
-    Raises:
-        ValueError: Si el valor no es un numero valido
-    """
+    """Valida y convierte a número positivo"""
     try:
         numero = float(valor)
         if numero <= 0:
@@ -117,18 +95,7 @@ def validar_numero(valor):
         raise ValueError(u"Por favor, ingrese un numero valido")
 
 def validar_cantidad(valor):
-    """
-    Valida que un valor sea una cantidad valida (entero positivo)
-    
-    Args:
-        valor (str): El valor a validar
-        
-    Returns:
-        int: La cantidad convertida si es valida
-        
-    Raises:
-        ValueError: Si el valor no es una cantidad valida
-    """
+    """Valida y convierte a entero positivo"""
     try:
         cantidad = int(valor)
         if cantidad <= 0:
@@ -138,17 +105,7 @@ def validar_cantidad(valor):
         raise ValueError(u"Por favor, ingrese un numero entero positivo")
 
 def solicitar_entrada(mensaje, validacion=None, mensaje_error=None):
-    """
-    Solicita entrada al usuario hasta que sea valida
-    
-    Args:
-        mensaje (str): Mensaje para solicitar la entrada
-        validacion (callable): Funcion de validacion a aplicar (opcional)
-        mensaje_error (str): Mensaje de error personalizado (opcional)
-        
-    Returns:
-        El valor validado
-    """
+    """Solicita y valida entrada del usuario"""
     while True:
         try:
             valor = raw_input(mensaje)
@@ -162,16 +119,7 @@ def solicitar_entrada(mensaje, validacion=None, mensaje_error=None):
             print(u"Por favor, intente nuevamente.")
 
 def solicitar_opcion_menu(opciones, mensaje=u"Seleccione una opcion: "):
-    """
-    Solicita una opcion de menu hasta que sea valida
-    
-    Args:
-        opciones (list): Lista de opciones validas
-        mensaje (str): Mensaje para solicitar la entrada
-        
-    Returns:
-        str: La opcion seleccionada
-    """
+    """Solicita opción válida del menú"""
     while True:
         opcion = raw_input(mensaje)
         if opcion in opciones:
