@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from models import Producto, Pedido
 from utils import guardar_pedidos, cargar_pedidos
 
